@@ -8,6 +8,7 @@ node_modules/
 dist/
 web-build/
 expo-env.d.ts
+.env
 
 # Native
 .kotlin/
@@ -17,6 +18,7 @@ expo-env.d.ts
 *.p12
 *.key
 *.mobileprovision
+masterPrompt.md
 
 # Metro
 .metro-health-check*
