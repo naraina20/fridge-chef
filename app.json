@@ -14,7 +14,13 @@
     },
     "ios": {
       "icon": "./assets/icon.png",
-      "supportsTablet": true
+      "supportsTablet": true,
+      "infoPlist": {
+        "NSCameraUsageDescription": "Allow access to the camera to take photos or scan items.",
+        "NSPhotoLibraryUsageDescription": "Allow access to the photo library to pick or save photos.",
+        "NSPhotoLibraryAddUsageDescription": "Allow saving photos to the photo library.",
+        "NSMicrophoneUsageDescription": "Allow access to the microphone for recording when needed."
+      }
     },
     "android": {
       "icon": "./assets/icon.png",
@@ -22,15 +28,24 @@
         "foregroundImage": "./assets/icon.png",
         "backgroundColor": "#ffffff"
       },
-      "edgeToEdgeEnabled": true,
+      "edgeToEdgeEnabled": false,
       "predictiveBackGestureEnabled": false,
-      "package": "com.naraina20.FridgeChef"
+      "package": "com.naraina20.FridgeChef",
+      "permissions": [
+        "INTERNET",
+        "ACCESS_NETWORK_STATE",
+        "CAMERA",
+        "RECORD_AUDIO",
+        "READ_EXTERNAL_STORAGE",
+        "WRITE_EXTERNAL_STORAGE"
+      ]
     },
     "web": {
       "favicon": "./assets/icon.png"
     },
     "plugins": [
-      "expo-router"
+      "expo-router",
+      "expo-splash-screen"
     ],
     "experiments": {
       "typedRoutes": true
