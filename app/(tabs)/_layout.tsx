@@ -1,13 +1,16 @@
 import { Tabs } from 'expo-router';
 import { Feather } from '@expo/vector-icons';
 import { useNetInfo } from '@react-native-community/netinfo';
-import { View, Text, StyleSheet,Platform  } from 'react-native';
+import { View, Text, StyleSheet, Platform, TouchableOpacity } from 'react-native';
 import * as NavigationBar from 'expo-navigation-bar';
 import { StatusBar } from 'expo-status-bar';
 import { useEffect } from 'react';
 import * as SystemUI from 'expo-system-ui';
+import { useTheme } from '../../lib/theme';
 
 function OfflineBanner() {
+  const { colors } = useTheme();
+  const styles = createStyles(colors)
   return (
     <View style={styles.offlineContainer}>
       <Text style={styles.offlineTitle}>No Connection</Text>
@@ -33,18 +36,22 @@ function useIsOffline() {
 
 export default function TabsLayout() {
   const isOffline = useIsOffline()
+  const { isDark, toggleTheme, colors } = useTheme();
 
   useEffect(() => {
     const configureUI = async () => {
       if (Platform.OS === 'android') {
-        await SystemUI.setBackgroundColorAsync("#020617");
+        await SystemUI.setBackgroundColorAsync(colors.screenBackground);
 
         // 2. Make the bottom buttons (triangle/circle/square) white/light
-        await NavigationBar.setButtonStyleAsync("light");
-        
+        isDark ? 
+        await NavigationBar.setButtonStyleAsync("light") :
+        await NavigationBar.setButtonStyleAsync("dark") ;
+
+
         // OPTIONAL: Explicitly enable transparent edge-to-edge (removes warnings)
         await NavigationBar.setPositionAsync("absolute");
-        await NavigationBar.setBackgroundColorAsync("#ffffff00"); // Transparent
+        await NavigationBar.setBackgroundColorAsync(colors.screenBackground)
       }
     };
 
@@ -53,25 +60,35 @@ export default function TabsLayout() {
 
   return (
     <>
-      <StatusBar style="light" backgroundColor="#020617" />
+      <StatusBar style={isDark ? "light" : "dark"} backgroundColor={colors.screenBackground} />
       {isOffline ? OfflineBanner() :
         <Tabs
           screenOptions={{
             headerShown: true,
+            tabBarHideOnKeyboard: true,
             headerStyle: {
-              backgroundColor: '#020617', // Example: Dark blue background matching your tab bar
-              borderBottomColor: '#111827', // Optional: separator line color
-              borderBottomWidth: 1,         // Optional: separator line width
+              backgroundColor: colors.screenBackground,
+              borderBottomColor: colors.headerBorder,
+              borderBottomWidth: 1,
             },
-            headerTintColor: '#f97316',   // Example: Orange text matching your active tab
+            headerRight: () => (
+              <TouchableOpacity onPress={toggleTheme} style={{ marginRight: 16 }}>
+                <Feather
+                  name={isDark ? 'sun' : 'moon'}
+                  color={colors.primary}
+                  size={24}
+                />
+              </TouchableOpacity>
+            ),
+            headerTintColor: colors.primary,
             headerTitleStyle: {
               fontWeight: 'bold',
             },
-            tabBarActiveTintColor: '#f97316',
-            tabBarInactiveTintColor: '#9ca3af',
+            tabBarActiveTintColor: colors.primary,
+            tabBarInactiveTintColor: colors.inactive,
             tabBarStyle: {
-              backgroundColor: '#020617',
-              borderTopColor: '#111827',
+              backgroundColor: colors.screenBackground,
+              borderTopColor: colors.surface,
             },
           }}
         >
@@ -107,22 +124,24 @@ export default function TabsLayout() {
   );
 }
 
-const styles = StyleSheet.create({
-  offlineContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    paddingTop: 40,
-    paddingBottom: 12,
-    paddingHorizontal: 16,
-    backgroundColor: '#111827',
-  },
-  offlineTitle: {
-    color: '#fef3c7',
-    fontSize: 18,
-    fontWeight: '600',
-  },
-  offlineText: {
-    color: '#e5e7eb',
-    marginTop: 4,
-  },
-});
+function createStyles(colors: any) {
+  return StyleSheet.create({
+    offlineContainer: {
+      flex: 1,
+      justifyContent: 'center',
+      paddingTop: 40,
+      paddingBottom: 12,
+      paddingHorizontal: 16,
+      backgroundColor: colors.surface,
+    },
+    offlineTitle: {
+      color: colors.offlineTitle,
+      fontSize: 18,
+      fontWeight: '600',
+    },
+    offlineText: {
+      color: colors.textSecondary,
+      marginTop: 4,
+    },
+  });
+}

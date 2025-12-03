@@ -1,9 +1,11 @@
 import { Stack } from 'expo-router';
 import { AuthProvider } from '../lib/auth';
+import { ThemeProvider } from '../lib/theme';
 
 export default function RootLayout() {
   return (
     <AuthProvider>
+      <ThemeProvider>
       <Stack>
         <Stack.Screen
           name="(tabs)"
@@ -17,9 +19,11 @@ export default function RootLayout() {
             title: 'Camera',
             headerStyle: { backgroundColor: '#020617' },
             headerTintColor: '#f9fafb',
+            headerShown: false
           }}
         />
       </Stack>
+      </ThemeProvider>
     </AuthProvider>
   );
 }

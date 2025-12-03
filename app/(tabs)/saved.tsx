@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useContext } from 'react';
 import {
   View,
   Text,
@@ -9,12 +9,19 @@ import {
 } from 'react-native';
 import { supabase, type GeneratedRecipesRow } from '../../lib/supabase';
 import { useAuth } from '../../lib/auth';
+import { useNavigation } from 'expo-router';
+import { Feather } from '@expo/vector-icons';
+import { useTheme } from '../../lib/theme';
 
 export default function SavedScreen() {
+  const navigation = useNavigation();
   const { user, loading: authLoading } = useAuth();
   const [items, setItems] = useState<GeneratedRecipesRow[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
+  const { isDark, toggleTheme, colors } = useTheme();
+  const styles = createStyles(colors)
 
   const load = async () => {
     if (!user) {
@@ -46,19 +53,35 @@ export default function SavedScreen() {
     }
   };
 
+
   useEffect(() => {
     if (!authLoading) {
       load();
     }
-  }, [authLoading, user]);
+    navigation.setOptions({
+      headerRight: () => (
+        <View style={{ flexDirection: 'row', marginRight: 16, gap: 12 }}>
+          <TouchableOpacity onPress={load}>
+            <Feather name="refresh-cw" color={colors.primary} size={24} />
+          </TouchableOpacity>
+
+          <TouchableOpacity onPress={toggleTheme}>
+            <Feather
+              name={isDark ? 'sun' : 'moon'}
+              color={colors.primary}
+              size={24}
+            />
+          </TouchableOpacity>
+        </View>
+      ),
+    });
+  }, [authLoading, user, navigation]);
 
   return (
     <View style={styles.container}>
-      <Text style={styles.headerTitle}>Saved Recipes</Text>
-
       {authLoading && (
         <View style={styles.center}>
-          <ActivityIndicator size="large" color="#f97316" />
+          <ActivityIndicator size="large" color={colors.primary} />
         </View>
       )}
 
@@ -72,7 +95,7 @@ export default function SavedScreen() {
 
       {!authLoading && user && loading && (
         <View style={styles.center}>
-          <ActivityIndicator size="large" color="#f97316" />
+          <ActivityIndicator size="large" color={colors.primary} />
           <Text style={styles.muted}>Fetching your past fridge scans...</Text>
         </View>
       )}
@@ -125,71 +148,72 @@ export default function SavedScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#020617',
-    paddingHorizontal: 16,
-    paddingTop: 16,
-  },
-  headerTitle: {
-    fontSize: 24,
-    fontWeight: '700',
-    color: '#f9fafb',
-    marginBottom: 12,
-  },
-  center: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  muted: {
-    marginTop: 8,
-    color: '#9ca3af',
-    textAlign: 'center',
-  },
-  errorText: {
-    color: '#fecaca',
-    textAlign: 'center',
-    marginBottom: 12,
-  },
-  listContent: {
-    paddingBottom: 16,
-  },
-  card: {
-    backgroundColor: '#020617',
-    borderWidth: 1,
-    borderColor: '#1f2937',
-    borderRadius: 12,
-    padding: 12,
-    marginBottom: 12,
-  },
-  cardDate: {
-    fontSize: 12,
-    color: '#6b7280',
-    marginBottom: 4,
-  },
-  cardTitle: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#f9fafb',
-  },
-  cardSubtitle: {
-    fontSize: 13,
-    color: '#d1d5db',
-    marginTop: 4,
-  },
-  secondaryButton: {
-    paddingHorizontal: 16,
-    paddingVertical: 8,
-    borderRadius: 999,
-    borderWidth: 1,
-    borderColor: '#e5e7eb',
-    marginTop: 8,
-  },
-  secondaryButtonText: {
-    color: '#e5e7eb',
-    fontWeight: '500',
-  },
-});
-
+function createStyles(colors: any) {
+  return StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: colors.screenBackground,
+      paddingHorizontal: 16,
+      paddingTop: 16,
+    },
+    headerTitle: {
+      fontSize: 24,
+      fontWeight: '700',
+      color: colors.text,
+      marginBottom: 12,
+    },
+    center: {
+      flex: 1,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    muted: {
+      marginTop: 8,
+      color: colors.inactive,
+      textAlign: 'center',
+    },
+    errorText: {
+      color: colors.error,
+      textAlign: 'center',
+      marginBottom: 12,
+    },
+    listContent: {
+      paddingBottom: 16,
+    },
+    card: {
+      backgroundColor: colors.screenBackground,
+      borderWidth: 1,
+      borderColor: colors.headerBorder,
+      borderRadius: 12,
+      padding: 12,
+      marginBottom: 12,
+    },
+    cardDate: {
+      fontSize: 12,
+      color: colors.inactive,
+      marginBottom: 4,
+    },
+    cardTitle: {
+      fontSize: 16,
+      fontWeight: '600',
+      color: colors.textSecondary,
+    },
+    cardSubtitle: {
+      fontSize: 13,
+      color: colors.text,
+      marginTop: 4,
+    },
+    secondaryButton: {
+      paddingHorizontal: 16,
+      paddingVertical: 8,
+      borderRadius: 999,
+      borderWidth: 1,
+      borderColor: colors.textSecondary,
+      marginTop: 8,
+    },
+    secondaryButtonText: {
+      color: colors.offlineText,
+      fontWeight: '500',
+    },
+  });
+}

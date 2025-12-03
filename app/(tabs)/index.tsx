@@ -1,8 +1,11 @@
 import { View, Text, Button, StyleSheet } from 'react-native';
 import { useRouter } from 'expo-router';
+import { useTheme } from '../../lib/theme';
 
 export default function HomeScreen() {
   const router = useRouter();
+  const {colors} = useTheme()
+  const styles = createStyles(colors)
 
   return (
     <View style={styles.container}>
@@ -24,31 +27,33 @@ export default function HomeScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#0f172a',
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingHorizontal: 24,
-  },
-  title: {
-    fontSize: 32,
-    fontWeight: '700',
-    color: '#f9fafb',
-  },
-  subtitle: {
-    marginTop: 8,
-    fontSize: 16,
-    color: '#9ca3af',
-  },
-  content: {
-    marginTop: 32,
-    width: '100%',
-  },
-  helperText: {
-    marginBottom: 16,
-    color: '#e5e7eb',
-    textAlign: 'center',
-  },
-});
+function createStyles(colors: any) {
+  return StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: colors.background,
+      alignItems: 'center',
+      justifyContent: 'center',
+      paddingHorizontal: 24,
+    },
+    title: {
+      fontSize: 32,
+      fontWeight: '700',
+      color: colors.text,
+    },
+    subtitle: {
+      marginTop: 8,
+      fontSize: 16,
+      color: colors.inactive,
+    },
+    content: {
+      marginTop: 32,
+      width: '100%',
+    },
+    helperText: {
+      marginBottom: 16,
+      color: colors.offlineText,
+      textAlign: 'center',
+    },
+  });
+}

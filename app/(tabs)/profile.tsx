@@ -8,6 +8,7 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import { useAuth } from '../../lib/auth';
+import { useTheme } from '../../lib/theme';
 
 export default function ProfileScreen() {
   const { user, loading, signIn, signUp, signOut } = useAuth();
@@ -15,6 +16,8 @@ export default function ProfileScreen() {
   const [password, setPassword] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const { colors } = useTheme()
+  const styles = createStyles(colors)
 
   const handleAuth = async (mode: 'signin' | 'signup') => {
     try {
@@ -49,7 +52,7 @@ export default function ProfileScreen() {
   if (loading) {
     return (
       <View style={styles.container}>
-        <ActivityIndicator size="large" color="#f97316" />
+        <ActivityIndicator size="large" color={colors.primary} />
       </View>
     );
   }
@@ -92,7 +95,7 @@ export default function ProfileScreen() {
           autoCapitalize="none"
           keyboardType="email-address"
           placeholder="you@example.com"
-          placeholderTextColor="#6b7280"
+          placeholderTextColor={colors.textSecondary}
         />
 
         <Text style={styles.label}>Password</Text>
@@ -102,7 +105,7 @@ export default function ProfileScreen() {
           onChangeText={setPassword}
           secureTextEntry
           placeholder="••••••••"
-          placeholderTextColor="#6b7280"
+          placeholderTextColor={colors.inactive}
         />
 
         {error && <Text style={styles.errorText}>{error}</Text>}
@@ -134,82 +137,83 @@ export default function ProfileScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'flex-start',
-    backgroundColor: '#020617',
-    paddingHorizontal: 24,
-    paddingTop: 48,
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: '700',
-    color: '#f9fafb',
-  },
-  subtitle: {
-    marginTop: 8,
-    fontSize: 14,
-    color: '#9ca3af',
-  },
-  form: {
-    marginTop: 32,
-  },
-  label: {
-    fontSize: 14,
-    color: '#e5e7eb',
-    marginBottom: 4,
-  },
-  value: {
-    fontSize: 16,
-    color: '#f9fafb',
-    marginBottom: 24,
-  },
-  input: {
-    borderRadius: 8,
-    borderWidth: 1,
-    borderColor: '#374151',
-    paddingHorizontal: 12,
-    paddingVertical: 10,
-    color: '#f9fafb',
-    marginBottom: 16,
-    backgroundColor: '#020617',
-  },
-  errorText: {
-    color: '#fecaca',
-    marginBottom: 12,
-  },
-  buttonsRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginTop: 8,
-  },
-  primaryButton: {
-    // flex: 1,
-    marginLeft: 8,
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-    borderRadius: 999,
-    backgroundColor: '#f97316',
-    alignItems: 'center',
-  },
-  primaryButtonText: {
-    color: '#0b1120',
-    fontWeight: '600',
-  },
-  secondaryButton: {
-    // flex: 1,
-    marginRight: 8,
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-    borderRadius: 999,
-    borderWidth: 1,
-    borderColor: '#e5e7eb',
-    alignItems: 'center',
-  },
-  secondaryButtonText: {
-    color: '#e5e7eb',
-    fontWeight: '500',
-  },
-});
-
+function createStyles(colors: any) {
+  return StyleSheet.create({
+    container: {
+      flex: 1,
+      justifyContent: 'flex-start',
+      backgroundColor: colors.screenBackground,
+      paddingHorizontal: 24,
+      paddingTop: 48,
+    },
+    title: {
+      fontSize: 24,
+      fontWeight: '700',
+      color: colors.text,
+    },
+    subtitle: {
+      marginTop: 8,
+      fontSize: 14,
+      color: colors.inactive,
+    },
+    form: {
+      marginTop: 32,
+    },
+    label: {
+      fontSize: 14,
+      color: colors.textSecondary,
+      marginBottom: 4,
+    },
+    value: {
+      fontSize: 16,
+      color: colors.text,
+      marginBottom: 24,
+    },
+    input: {
+      borderRadius: 8,
+      borderWidth: 1,
+      borderColor: colors.surface,
+      paddingHorizontal: 12,
+      paddingVertical: 10,
+      color: colors.text,
+      marginBottom: 16,
+      backgroundColor: colors.screenBackground,
+    },
+    errorText: {
+      color: colors.textSecondary,
+      marginBottom: 12,
+    },
+    buttonsRow: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      marginTop: 8,
+    },
+    primaryButton: {
+      // flex: 1,
+      marginLeft: 8,
+      paddingHorizontal: 16,
+      paddingVertical: 12,
+      borderRadius: 999,
+      backgroundColor: colors.primary,
+      alignItems: 'center',
+    },
+    primaryButtonText: {
+      color: colors.offlineBg,
+      fontWeight: '600',
+    },
+    secondaryButton: {
+      // flex: 1,
+      marginRight: 8,
+      paddingHorizontal: 16,
+      paddingVertical: 12,
+      borderRadius: 999,
+      borderWidth: 1,
+      borderColor: colors.text,
+      alignItems: 'center',
+    },
+    secondaryButtonText: {
+      color: colors.text,
+      fontWeight: '500',
+    },
+  });
+}
