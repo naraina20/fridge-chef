@@ -5,16 +5,18 @@
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
-    "userInterfaceStyle": "light",
+    "userInterfaceStyle": "dark",
+    "backgroundColor": "#00000",
     "newArchEnabled": true,
     "splash": {
       "image": "./assets/icon.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#00000"
     },
     "ios": {
       "icon": "./assets/icon.png",
       "supportsTablet": true,
+      "userInterfaceStyle": "dark",
       "infoPlist": {
         "NSCameraUsageDescription": "Allow access to the camera to take photos or scan items.",
         "NSPhotoLibraryUsageDescription": "Allow access to the photo library to pick or save photos.",
@@ -26,10 +28,11 @@
       "icon": "./assets/icon.png",
       "adaptiveIcon": {
         "foregroundImage": "./assets/icon.png",
-        "backgroundColor": "#ffffff"
+        "backgroundColor": "#00000"
       },
       "edgeToEdgeEnabled": false,
       "predictiveBackGestureEnabled": false,
+      "userInterfaceStyle": "dark",
       "package": "com.naraina20.FridgeChef",
       "permissions": [
         "INTERNET",

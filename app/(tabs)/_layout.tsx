@@ -41,17 +41,20 @@ export default function TabsLayout() {
   useEffect(() => {
     const configureUI = async () => {
       if (Platform.OS === 'android') {
-        await SystemUI.setBackgroundColorAsync(colors.screenBackground);
+        
+        // setTimeout(async () => {
+          await SystemUI.setBackgroundColorAsync(colors.screenBackground);
 
-        // 2. Make the bottom buttons (triangle/circle/square) white/light
-        isDark ? 
-        await NavigationBar.setButtonStyleAsync("light") :
-        await NavigationBar.setButtonStyleAsync("dark") ;
+          // 2. Make the bottom buttons (triangle/circle/square) white/light
+          isDark ?
+            await NavigationBar.setButtonStyleAsync("light") :
+            await NavigationBar.setButtonStyleAsync("dark");
 
 
-        // OPTIONAL: Explicitly enable transparent edge-to-edge (removes warnings)
-        await NavigationBar.setPositionAsync("absolute");
-        await NavigationBar.setBackgroundColorAsync(colors.screenBackground)
+          // OPTIONAL: Explicitly enable transparent edge-to-edge (removes warnings)
+          await NavigationBar.setPositionAsync("absolute");
+          await NavigationBar.setBackgroundColorAsync(colors.screenBackground)
+        // }, 500);
       }
     };
 
@@ -60,7 +63,7 @@ export default function TabsLayout() {
 
   return (
     <>
-      <StatusBar style={isDark ? "light" : "dark"} backgroundColor={colors.screenBackground} />
+      <StatusBar style={isDark ? "light" : "dark"} animated  backgroundColor={colors.screenBackground}/>
       {isOffline ? OfflineBanner() :
         <Tabs
           screenOptions={{
