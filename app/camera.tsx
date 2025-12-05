@@ -18,7 +18,6 @@ import {
   generateRecipesFromImage,
   type GeneratedRecipe,
 } from '../lib/openrouter';
-// import IconImage from '../assets/adaptive-icon.png';
 
 export default function CameraScreen() {
   const [permission, requestPermission] = useCameraPermissions();
@@ -103,6 +102,7 @@ export default function CameraScreen() {
       }
 
       const asset = result.assets[0];
+      setIsCapturing(true);
 
       const manipulated = await ImageManipulator.manipulateAsync(
         asset.uri,
@@ -116,6 +116,7 @@ export default function CameraScreen() {
       setPreview(manipulated.uri);
       setRecipes(null);
       setError(null);
+      setIsCapturing(false);
     } catch (err) {
       console.error('Error picking image', err);
       setError('Could not pick image. Please try again.');
@@ -146,7 +147,7 @@ export default function CameraScreen() {
       console.error('Error processing photo', err);
       setError(
         err?.message ||
-          'The chef is confused, please try a clearer photo or try again.'
+        'The chef is confused, please try a clearer photo or try again.'
       );
     } finally {
       setIsProcessing(false);
@@ -161,7 +162,6 @@ export default function CameraScreen() {
           contentContainerStyle={styles.previewContent}
         >
           <Image source={{ uri: preview }} style={styles.previewImage} />
-          {/* <Image source={IconImage} style={styles.previewImage} /> */}
           <View style={styles.previewActions}>
             <TouchableOpacity
               style={[styles.secondaryButton, { marginRight: 12 }]}
@@ -265,6 +265,13 @@ export default function CameraScreen() {
               </TouchableOpacity>
             </View>
           </View>
+
+          {isCapturing && (
+            <View style={styles.loadingOverlay}>
+              <ActivityIndicator size="large" color="#f97316" />
+              <Text style={{color : "#fdfdfdff"}} >Image Processing</Text>
+            </View>
+          )}
         </View>
       )}
     </View>
@@ -319,6 +326,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'flex-end',
     paddingBottom: 40,
+  },
+  loadingOverlay:{
+    ...StyleSheet.absoluteFillObject,
+    flex : 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingBottom: 40,
+    backgroundColor: '#00000088'
   },
   controlsRow: {
     flexDirection: 'row',

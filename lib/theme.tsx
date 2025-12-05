@@ -4,7 +4,7 @@ import { lightTheme,darkTheme } from './colors';
 type ThemeContextValue = {
   isDark: boolean;
   toggleTheme: () => void;
-  colors: typeof lightTheme;
+  colors: typeof darkTheme;
 };
 
 const ThemeContext = createContext<ThemeContextValue | undefined>(undefined);
